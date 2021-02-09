@@ -18,10 +18,11 @@ import {
   Typography,
   withStyles,
 } from "@material-ui/core";
-import { createRef, useEffect, useState } from "react";
+import React from "react";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import clsx from "clsx";
+import { ScaleRuller } from "./ScaleRuller";
 
 const TableFieldNameCell = withStyles((theme) => ({
   head: {
@@ -36,20 +37,20 @@ const TableFieldNameCell = withStyles((theme) => ({
 
 export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
   const classes = useStyles();
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [scale, setScale] = useState(30);
-  const [sumOfThickness, setSumOfThickness] = useState(0);
-  const [boreholeDataCount, setBoreholeDataCount] = useState(0);
-  const [currentItem, setCurrentItem] = useState(null);
-  const [thick_values, setThick_values] = useState([]);
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
+  const [scale, setScale] = React.useState(30);
+  const [sumOfThickness, setSumOfThickness] = React.useState(0);
+  const [boreholeDataCount, setBoreholeDataCount] = React.useState(0);
+  const [currentItem, setCurrentItem] = React.useState(null);
+  const [thick_values, setThick_values] = React.useState([]);
   const getStrataName = (thick_value) =>
     dialogInfo.strataNameDatas.find((e) => e.id === thick_value.thick_id).name;
 
-  useEffect(() => {
+  React.useEffect(() => {
     setSelectedIndex(0);
   }, [dialogInfo]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     setBoreholeDataCount(dialogInfo?.boreholeData?.length || 0);
 
     const currentItem =
@@ -128,28 +129,30 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
       <DialogContent>
         <TableContainer className={classes.container} component={Paper}>
           <Table aria-label="simple table">
-            <TableRow>
-              <TableFieldNameCell variant="head">이름</TableFieldNameCell>
-              <TableCell>{currentItem?.name}</TableCell>
-              <TableFieldNameCell variant="head">
-                지반 표고 (Meter)
-              </TableFieldNameCell>
-              <TableCell>{currentItem?.elevation}</TableCell>
-            </TableRow>
-            <TableRow>
-              <TableFieldNameCell variant="head">
-                Easting (X)
-              </TableFieldNameCell>
-              <TableCell>
-                {Number(currentItem?.easting || 0).toLocaleString()}
-              </TableCell>
-              <TableFieldNameCell variant="head">
-                Northing (Y)
-              </TableFieldNameCell>
-              <TableCell>
-                {Number(currentItem?.northing || 0).toLocaleString()}
-              </TableCell>
-            </TableRow>
+            <TableBody>
+              <TableRow>
+                <TableFieldNameCell variant="head">이름</TableFieldNameCell>
+                <TableCell>{currentItem?.name}</TableCell>
+                <TableFieldNameCell variant="head">
+                  지반 표고 (Meter)
+                </TableFieldNameCell>
+                <TableCell>{currentItem?.elevation}</TableCell>
+              </TableRow>
+              <TableRow>
+                <TableFieldNameCell variant="head">
+                  Easting (X)
+                </TableFieldNameCell>
+                <TableCell>
+                  {Number(currentItem?.easting || 0).toLocaleString()}
+                </TableCell>
+                <TableFieldNameCell variant="head">
+                  Northing (Y)
+                </TableFieldNameCell>
+                <TableCell>
+                  {Number(currentItem?.northing || 0).toLocaleString()}
+                </TableCell>
+              </TableRow>
+            </TableBody>
           </Table>
         </TableContainer>
         <TableContainer className={classes.container} component={Paper}>
@@ -278,10 +281,10 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
       <DialogActions>
         <div style={{ flexGrow: 1, width: 40, padding: "0 16px" }}>
           <Typography id="discrete-slider" gutterBottom>
-            Scale{" "}
+            Scale
           </Typography>
           <Slider
-            defaultValue={scale}
+            defaultValue={30}
             getAriaValueText={(value) => `1 Meter : ${value} pixels`}
             aria-labelledby="discrete-slider"
             valueLabelDisplay="auto"
@@ -352,54 +355,3 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "Maroon",
   },
 }));
-const ScaleRuller = ({ scale, sumOfThickness, width = 100 }) => {
-  const height = sumOfThickness * scale;
-
-  const canvasRef = createRef();
-
-  // round pixelRatio, because older devices have a pixelRatio of 1.5. Treat them as @2x devices
-  let pixelRatio = Math.round(window.devicePixelRatio) || 1;
-  const collectedWidth = width * pixelRatio;
-  const collectedHeight = height * pixelRatio;
-  console.log(`pixelRatio: ${pixelRatio}`);
-  useEffect(() => {
-    /**
-     * @type {HTMLCanvasElement}
-     */
-    const canvas = canvasRef.current;
-    canvasRef.current.width = collectedWidth;
-    canvasRef.current.height = collectedHeight;
-    canvas.style.width = Math.round(collectedWidth / pixelRatio) + "px";
-    canvas.style.height = Math.round(collectedHeight / pixelRatio) + "px";
-    /**
-     * @type {CanvasRenderingContext2D}
-     */
-    const ctx = canvas.getContext("2d");
-    ctx.scale(pixelRatio, pixelRatio);
-    ctx.strokeStyle = "#000";
-    ctx.lineWidth = 1;
-
-    for (let currentY = 0; currentY <= height; currentY += scale / 5) {
-      ctx.beginPath();
-
-      if (currentY % scale < 0.01) {
-        ctx.moveTo(width - 20.5, currentY - 0.5);
-      } else {
-        ctx.moveTo(width - 10.5, currentY - 0.5);
-      }
-      ctx.lineTo(width, currentY - 0.5);
-      ctx.stroke();
-    }
-  }, [
-    canvasRef,
-    collectedHeight,
-    collectedWidth,
-    height,
-    pixelRatio,
-    scale,
-    sumOfThickness,
-    width,
-  ]);
-
-  return <canvas ref={canvasRef} width={width} height={height}></canvas>;
-};

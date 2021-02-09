@@ -105,6 +105,33 @@ const defaultDialogInfo = {
   isVisiable: false,
   boreholeData: null,
   strataNameDatas: null,
+  epsg: "EPSG:3857",
+};
+
+const doExport = ({ epsg, strataNameDatas, rows }) => {
+  const element = document.createElement("a");
+
+  const csvData = [
+    `bhd-v1, 좌표계:,${epsg},layername:, ${strataNameDatas
+      .map((e) => e.name)
+      .join(", ")}`,
+    "name, easting, northing, ground_altitude, thick_1, thick_2, thick_3, thick_4, thick_5, thick_6",
+  ];
+  rows.map((row) => {
+    csvData.push(
+      `${row.name}, ${row.northing}, ${row.easting}, ${
+        row.elevation
+      }, ${strataNameDatas.map((e) => row[e.id]).join(",")}`
+    );
+    return true;
+  });
+  const file = new Blob(["\uFEFF" + csvData.join("\r\n")], {
+    type: "text/csv;charset=utf-8",
+  });
+  element.href = URL.createObjectURL(file);
+  element.download = "borehole_data.csv";
+  document.body.appendChild(element);
+  element.click();
 };
 
 export default function BoreholeDataGrid() {
@@ -125,7 +152,17 @@ export default function BoreholeDataGrid() {
   return (
     <>
       <div style={{ height: 400, width: "100%" }}>
-        <BoreholeToolbar doEdit={doEditHandler} />
+        <BoreholeToolbar
+          doEdit={doEditHandler}
+          doExport={() => {
+            doExport({
+              epsg: dialogInfo.epsg,
+              strataNameDatas: strataNameDatas,
+              rows: rows,
+            });
+            return true;
+          }}
+        />
         <DataGrid
           rows={rows}
           columns={columns}
@@ -151,7 +188,13 @@ const BoreholeToolbar = ({ doEdit, doExport }) => {
       <Button>삭제</Button>
       <div style={{ flexGrow: 1 }} />
       <Button>불러오기</Button>
-      <Button onClick={doExport && doExport()}>내보내기</Button>
+      <Button
+        onClick={() => {
+          doExport && doExport();
+        }}
+      >
+        내보내기
+      </Button>
     </Toolbar>
   );
 };
