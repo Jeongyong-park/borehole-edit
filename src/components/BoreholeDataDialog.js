@@ -16,10 +16,23 @@ import {
   TableRow,
   Toolbar,
   Typography,
+  withStyles,
 } from "@material-ui/core";
 import { createRef, useEffect, useState } from "react";
 import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
+import clsx from "clsx";
+
+const TableFieldNameCell = withStyles((theme) => ({
+  head: {
+    backgroundColor: theme.palette.grey[50],
+    color: theme.palette.common.black,
+    fontWeight: 600,
+  },
+  body: {
+    fontSize: 14,
+  },
+}))(TableCell);
 
 export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
   const classes = useStyles();
@@ -29,6 +42,9 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
   const [boreholeDataCount, setBoreholeDataCount] = useState(0);
   const [currentItem, setCurrentItem] = useState(null);
   const [thick_values, setThick_values] = useState([]);
+  const getStrataName = (thick_value) =>
+    dialogInfo.strataNameDatas.find((e) => e.id === thick_value.thick_id).name;
+
   useEffect(() => {
     setSelectedIndex(0);
   }, [dialogInfo]);
@@ -49,6 +65,7 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
       currentItem &&
         currentItem[culumnName] &&
         thick_values.push({
+          thick_id: culumnName,
           elevation:
             thick_values.length > 0
               ? before_tick_value.elevation - current_tick
@@ -79,7 +96,7 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
       <DialogTitle>
         <Toolbar>
           <Typography variant="h6" component="h2">
-            시추데이터 조회 || 시추데이터 수정
+            시추데이터 조회
           </Typography>
           <div style={{ flexGrow: 1 }} />
           <div style={{ margin: "0 8px" }}>
@@ -110,18 +127,28 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
       </DialogTitle>
       <DialogContent>
         <TableContainer className={classes.container} component={Paper}>
-          <Table>
+          <Table aria-label="simple table">
             <TableRow>
-              <TableCell variant="head">이름</TableCell>
+              <TableFieldNameCell variant="head">이름</TableFieldNameCell>
               <TableCell>{currentItem?.name}</TableCell>
-              <TableCell variant="head">지반표고</TableCell>
+              <TableFieldNameCell variant="head">
+                지반 표고 (Meter)
+              </TableFieldNameCell>
               <TableCell>{currentItem?.elevation}</TableCell>
             </TableRow>
             <TableRow>
-              <TableCell variant="head">Easting (X)</TableCell>
-              <TableCell>{currentItem?.easting}</TableCell>
-              <TableCell variant="head">Northing (Y)</TableCell>
-              <TableCell>{currentItem?.northing}</TableCell>
+              <TableFieldNameCell variant="head">
+                Easting (X)
+              </TableFieldNameCell>
+              <TableCell>
+                {Number(currentItem?.easting || 0).toLocaleString()}
+              </TableCell>
+              <TableFieldNameCell variant="head">
+                Northing (Y)
+              </TableFieldNameCell>
+              <TableCell>
+                {Number(currentItem?.northing || 0).toLocaleString()}
+              </TableCell>
             </TableRow>
           </Table>
         </TableContainer>
@@ -213,7 +240,19 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
                   <TableCell className={classes.bottomCenter}>
                     {thick_value.thick.toFixed(2)}
                   </TableCell>
-                  <TableCell>-</TableCell>
+                  <TableCell
+                    className={clsx(
+                      classes.middleCenter,
+                      classes.fontEffect,
+                      idx === 0 && classes.backColor0,
+                      idx === 1 && classes.backColor1,
+                      idx === 2 && classes.backColor2,
+                      idx === 3 && classes.backColor3,
+                      idx === 4 && classes.backColor4
+                    )}
+                  >
+                    {getStrataName(thick_value)}
+                  </TableCell>
                   <TableCell>-</TableCell>
                 </TableRow>
               ))}
@@ -289,6 +328,28 @@ const useStyles = makeStyles((theme) => ({
   bottomCenter: {
     verticalAlign: "bottom",
     textAlign: "center",
+  },
+  middleCenter: {
+    verticalAlign: "middle",
+    textAlign: "center",
+  },
+  fontEffect: {
+    fontWeight: 600,
+  },
+  backColor0: {
+    backgroundColor: "brown",
+  },
+  backColor1: {
+    backgroundColor: "DarkGoldenRod",
+  },
+  backColor2: {
+    backgroundColor: "Olive",
+  },
+  backColor3: {
+    backgroundColor: "RosyBrown",
+  },
+  backColor4: {
+    backgroundColor: "Maroon",
   },
 }));
 const ScaleRuller = ({ scale, sumOfThickness, width = 100 }) => {
