@@ -1,6 +1,5 @@
-import logo from './logo.svg';
-import './App.css';
-import BoreholeDataGrid from './components/BoreholeDataGrid';
+import "./App.css";
+import BoreholeDataGrid from "./components/BoreholeDataGrid";
 
 function App() {
   return (
