@@ -1,0 +1,46 @@
+[
+  {
+    "id": 1,
+    "name": "BH-1",
+    "easting": 197922.5154,
+    "northing": 434655.3096,
+    "elevation": 50.17,
+    "thick_1": 0.8,
+    "thick_2": 1.2,
+    "thick_3": 6.0,
+    "thick_4": 22
+  },
+  {
+    "id": 2,
+    "name": "BH-2",
+    "easting": 197958.9944,
+    "northing": 434627.0276,
+    "elevation": 49.74,
+    "thick_1": 0.8,
+    "thick_2": 2.2,
+    "thick_3": 5.0,
+    "thick_4": 12
+  },
+  {
+    "id": 3,
+    "name": "BH-3",
+    "easting": 197975.1464,
+    "northing": 434581.0906,
+    "elevation": 49.25,
+    "thick_1": 0.7,
+    "thick_2": 2.1,
+    "thick_3": 12.2,
+    "thick_4": 7
+  },
+  {
+    "id": 4,
+    "name": "BH-4",
+    "easting": 197895.0414,
+    "northing": 434617.6986,
+    "elevation": 53.62,
+    "thick_1": 5.8,
+    "thick_2": 0.0,
+    "thick_3": 5.2,
+    "thick_4": 11
+  }
+]

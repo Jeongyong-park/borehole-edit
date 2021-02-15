@@ -251,7 +251,12 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
                       idx === 1 && classes.backColor1,
                       idx === 2 && classes.backColor2,
                       idx === 3 && classes.backColor3,
-                      idx === 4 && classes.backColor4
+                      idx === 4 && classes.backColor4,
+                      idx === 5 && classes.backColor5,
+                      idx === 6 && classes.backColor6,
+                      idx === 7 && classes.backColor7,
+                      idx === 8 && classes.backColor8,
+                      idx === 9 && classes.backColor9
                     )}
                   >
                     {getStrataName(thick_value)}
@@ -352,6 +357,21 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "RosyBrown",
   },
   backColor4: {
-    backgroundColor: "Maroon",
+    backgroundColor: "DarkBlue",
+  },
+  backColor5: {
+    backgroundColor: "DarkMagenta",
+  },
+  backColor6: {
+    backgroundColor: "DarkKhaki",
+  },
+  backColor7: {
+    backgroundColor: "DarkOrange",
+  },
+  backColor8: {
+    backgroundColor: "DarkSeaGreen",
+  },
+  backColor9: {
+    backgroundColor: "DarkSlateGrey",
   },
 }));
