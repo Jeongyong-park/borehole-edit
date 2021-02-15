@@ -1,8 +1,9 @@
 import React, { createRef } from "react";
-import { Button, Toolbar, Typography } from "@material-ui/core";
+import { Button, makeStyles, Toolbar, Typography } from "@material-ui/core";
 import { DataGrid } from "@material-ui/data-grid";
 import { BoreholeViewerDialog } from "./BoreholeDataDialog";
 import { parseBoreholeData } from "./BorehoreDataParser";
+import { epsg2Str } from "./epsg2str";
 
 const columns = [
   { field: "id", headerName: "#", type: "number", width: 60 },
@@ -44,9 +45,9 @@ const doExport = ({
 
   const csvData = [
     `bhd-v1, 좌표계:,${epsg},layername:, ${strataNameDatas
-      .map((e) => e.name)
-      .join(", ")}`,
-    "name, easting, northing, ground_altitude, thick_1, thick_2, thick_3, thick_4, thick_5, thick_6",
+      .map((e) => e.name.trim())
+      .join(",")}`,
+    "name,easting,northing,ground_altitude,thick_1,thick_2,thick_3,thick_4,thick_5,thick_6",
   ];
 
   rows.map((row) => {
@@ -67,6 +68,7 @@ const doExport = ({
 };
 
 export default function BoreholeDataGrid() {
+  const classes = useStyles();
   const [dialogInfo, setDialogInfo] = React.useState(defaultDialogInfo);
   const [selection, setSelection] = React.useState([]);
   const [crs, setCrs] = React.useState("");
@@ -109,13 +111,13 @@ export default function BoreholeDataGrid() {
 
   return (
     <>
-      <div style={{ height: 400, width: "100%" }}>
+      <div style={{ height: "100%", width: "100%" }}>
         <BoreholeToolbar
           crs={crs}
           doEdit={doEditHandler}
           doExport={() => {
             doExport({
-              epsg: dialogInfo.epsg,
+              epsg: crs,
               strataNameDatas: strataNameDatas,
               rows: rows,
             });
@@ -123,14 +125,22 @@ export default function BoreholeDataGrid() {
           }}
           callbackLoadBoreholeData={handlerCallbackLoadBoreholeData}
         />
-        <DataGrid
-          rows={rows}
-          columns={columnsForGrid}
-          checkboxSelection
-          onSelectionChange={(newSelection) => {
-            setSelection(newSelection.rowIds);
-          }}
-        />
+        <div className={classes.dataGridArea}>
+          <DataGrid
+            rows={rows}
+            columns={columnsForGrid}
+            checkboxSelection
+            onSelectionChange={(newSelection) => {
+              setSelection(newSelection.rowIds);
+            }}
+            style={{ height: "auto" }}
+          />
+        </div>
+        <Toolbar>
+          <Typography variant="body2">
+            좌표계 (CRS): {crs ? epsg2Str(crs) : "알 수 없음"}
+          </Typography>
+        </Toolbar>
       </div>
       <BoreholeViewerDialog
         dialogInfo={dialogInfo}
@@ -140,12 +150,7 @@ export default function BoreholeDataGrid() {
   );
 }
 
-const BoreholeToolbar = ({
-  crs,
-  doEdit,
-  doExport,
-  callbackLoadBoreholeData,
-}) => {
+const BoreholeToolbar = ({ doEdit, doExport, callbackLoadBoreholeData }) => {
   const refFileInput = createRef();
 
   const handlerImportBtn = () => {
@@ -175,7 +180,7 @@ const BoreholeToolbar = ({
       <Button onClick={doEdit}>편집</Button>
       <Button>삭제</Button>
       <div style={{ flexGrow: 1 }} />
-      <Typography variant="body2">crs: {crs || "알 수 없음"}</Typography>
+
       <Button onClick={handlerImportBtn}>불러오기</Button>
       <Button
         onClick={() => {
@@ -193,3 +198,13 @@ const BoreholeToolbar = ({
     </Toolbar>
   );
 };
+const useStyles = makeStyles((theme) => ({
+  dataGridArea: {
+    [theme.breakpoints.down("xs")]: {
+      height: "calc(100% - (56px * 2))",
+    },
+    [theme.breakpoints.up("sm")]: {
+      height: "calc(100% - (64px * 2))",
+    },
+  },
+}));
