@@ -1,11 +1,26 @@
 import { createRef, useEffect } from "react";
 
+/**
+ *
+ * @typedef {object} ScaleRullerParams
+ * @property {number} scale
+ * @property {number} sumOfThickness
+ * @property {number} width
+ */
+
+/**
+ *
+ * @param props
+ * @param {number} props.scale
+ * @param {number} props.sumOfThickness
+ * @param {number} props.width
+ */
 export const ScaleRuller = ({ scale, sumOfThickness, width = 100 }) => {
   const canvasRef = createRef();
   const height = sumOfThickness * scale;
 
   // round pixelRatio, because older devices have a pixelRatio of 1.5. Treat them as @2x devices
-  let pixelRatio = Math.round(window.devicePixelRatio) || 1;
+  const pixelRatio = Math.round(window.devicePixelRatio) || 1;
   const collectedWidth = width * pixelRatio;
   const collectedHeight = height * pixelRatio;
 
@@ -16,8 +31,8 @@ export const ScaleRuller = ({ scale, sumOfThickness, width = 100 }) => {
     const canvas = canvasRef.current;
     canvasRef.current.width = collectedWidth;
     canvasRef.current.height = collectedHeight;
-    canvas.style.width = Math.round(collectedWidth / pixelRatio) + "px";
-    canvas.style.height = Math.round(collectedHeight / pixelRatio) + "px";
+    canvas.style.width = `${Math.round(collectedWidth / pixelRatio)}px`;
+    canvas.style.height = `${Math.round(collectedHeight / pixelRatio)}px`;
     /**
      * @type {CanvasRenderingContext2D}
      */
@@ -48,5 +63,5 @@ export const ScaleRuller = ({ scale, sumOfThickness, width = 100 }) => {
     width,
   ]);
 
-  return <canvas ref={canvasRef} width={width} height={height}></canvas>;
+  return <canvas ref={canvasRef} width={width} height={height} />;
 };

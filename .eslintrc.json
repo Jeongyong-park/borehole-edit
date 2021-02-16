@@ -1,7 +1,16 @@
 {
-    "extends": "react-app",
-    "rules": {
-        "semi": ["error", "always"],
-        "quotes": ["error", "double"]
-    }
+  "extends": ["react-app"],
+  "rules": {
+    "semi": ["error", "always"],
+    "quotes": ["error", "double"],
+    "react/jsx-filename-extension": [
+      "error",
+      {
+        "extensions": [".js", ".jsx"]
+      }
+    ]
+  },
+  "env": {
+    "browser": true
+  }
 }

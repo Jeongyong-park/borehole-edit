@@ -81,22 +81,21 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
     });
     setThick_values(thick_values);
     setSumOfThickness(
-      thick_values.reduce(function (prev, next) {
-        return prev + next.thick;
-      }, 0)
+      thick_values.reduce((prev, next) => prev + next.thick, 0),
     );
   }, [dialogInfo, selectedIndex]);
 
   return (
     <Dialog
+      role="dialog"
       open={dialogInfo.isVisiable}
       onClose={onClose}
-      fullWidth={true}
-      maxWidth={"md"}
+      fullWidth
+      maxWidth="md"
     >
       <DialogTitle>
         <Toolbar>
-          <Typography variant="h6" component="h2">
+          <Typography variant="h6" component="h2" role="title">
             시추데이터 조회
           </Typography>
           <div style={{ flexGrow: 1 }} />
@@ -256,7 +255,7 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
                       idx === 6 && classes.backColor6,
                       idx === 7 && classes.backColor7,
                       idx === 8 && classes.backColor8,
-                      idx === 9 && classes.backColor9
+                      idx === 9 && classes.backColor9,
                     )}
                   >
                     {getStrataName(thick_value)}
@@ -266,10 +265,10 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
               ))}
               {thick_values && thick_values.length > 0 ? (
                 <TableRow className={classes.thickRow}>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
-                  <TableCell></TableCell>
+                  <TableCell />
+                  <TableCell />
+                  <TableCell />
+                  <TableCell />
                   <TableCell style={{ verticalAlign: "top" }}>
                     심도{" "}
                     {thick_values[thick_values.length - 1].depth.toFixed(2)} M

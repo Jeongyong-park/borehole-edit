@@ -54,7 +54,7 @@ const doExport = ({
     csvData.push(
       `${row.name}, ${row.northing}, ${row.easting}, ${
         row.elevation
-      }, ${strataNameDatas.map((e) => row[e.id]).join(",")}`
+      }, ${strataNameDatas.map((e) => row[e.id]).join(",")}`,
     );
     return true;
   });
