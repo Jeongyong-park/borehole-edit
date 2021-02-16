@@ -3,17 +3,14 @@ import { createRef, useEffect } from "react";
 /**
  *
  * @typedef {object} ScaleRullerParams
- * @property {number} scale
- * @property {number} sumOfThickness
- * @property {number} width
+ * @property {number} scale 스케일(n pixel / 1 meter)
+ * @property {number} sumOfThickness 두께의 합
+ * @property {number} width 폭(px)
  */
 
 /**
- *
- * @param props
- * @param {number} props.scale
- * @param {number} props.sumOfThickness
- * @param {number} props.width
+ * 스케일바 렌더러
+ * @param {ScaleRullerParams} props
  */
 export const ScaleRuller = ({ scale, sumOfThickness, width = 100 }) => {
   const canvasRef = createRef();
@@ -29,14 +26,15 @@ export const ScaleRuller = ({ scale, sumOfThickness, width = 100 }) => {
      * @type {HTMLCanvasElement}
      */
     const canvas = canvasRef.current;
-    canvasRef.current.width = collectedWidth;
-    canvasRef.current.height = collectedHeight;
-    canvas.style.width = `${Math.round(collectedWidth / pixelRatio)}px`;
-    canvas.style.height = `${Math.round(collectedHeight / pixelRatio)}px`;
     /**
      * @type {CanvasRenderingContext2D}
      */
     const ctx = canvas.getContext("2d");
+
+    canvasRef.current.width = collectedWidth;
+    canvasRef.current.height = collectedHeight;
+    canvas.style.width = `${Math.round(collectedWidth / pixelRatio)}px`;
+    canvas.style.height = `${Math.round(collectedHeight / pixelRatio)}px`;
     ctx.scale(pixelRatio, pixelRatio);
     ctx.strokeStyle = "#000";
     ctx.lineWidth = 1;

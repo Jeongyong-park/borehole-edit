@@ -4,24 +4,23 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.3",
-    "@material-ui/data-grid": "^4.0.0-alpha.18",
+    "@material-ui/data-grid": "^4.0.0-alpha.19",
     "@material-ui/icons": "^4.11.2",
-    "@testing-library/jest-dom": "^5.11.4",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
+    "@testing-library/jest-dom": "^5.11.9",
+    "@testing-library/react": "^11.2.5",
+    "@testing-library/user-event": "^12.7.1",
     "clsx": "^1.1.1",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.2",
-    "web-vitals": "^1.0.1"
+    "web-vitals": "^1.1.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "eslint": "eslint src/**/*.js",
-    "eslint:fix": "eslint --fix src/**"
+    "eslint": "eslint src/**/*.js"
   },
   "eslintConfig": {
     "extends": [
@@ -42,7 +41,9 @@
     ]
   },
   "devDependencies": {
-    "eslint": "^7.19.0",
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.20.0",
+    "eslint-config-react-app": "^6.0.0",
     "prettier": "^2.2.1",
     "prettier-eslint": "^12.0.0"
   }

@@ -12,8 +12,10 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
   TableRow,
+  TextField,
   Toolbar,
   Typography,
   withStyles,
@@ -43,6 +45,7 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
   const [boreholeDataCount, setBoreholeDataCount] = React.useState(0);
   const [currentItem, setCurrentItem] = React.useState(null);
   const [thick_values, setThick_values] = React.useState([]);
+  const [isMetaEditMode, setMetaEditMode] = React.useState(false);
   const getStrataName = (thick_value) =>
     dialogInfo.strataNameDatas.find((e) => e.id === thick_value.thick_id).name;
 
@@ -131,29 +134,66 @@ export const BoreholeViewerDialog = ({ dialogInfo, onClose }) => {
             <TableBody>
               <TableRow>
                 <TableFieldNameCell variant="head">이름</TableFieldNameCell>
-                <TableCell>{currentItem?.name}</TableCell>
+                <TableCell>
+                  {isMetaEditMode ? (
+                    <TextField value={currentItem?.name} />
+                  ) : (
+                    currentItem?.name
+                  )}
+                </TableCell>
                 <TableFieldNameCell variant="head">
                   지반 표고 (Meter)
                 </TableFieldNameCell>
-                <TableCell>{currentItem?.elevation}</TableCell>
+                <TableCell>
+                  {isMetaEditMode ? (
+                    <TextField value={currentItem?.elevation} />
+                  ) : (
+                    currentItem?.elevation
+                  )}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableFieldNameCell variant="head">
                   Easting (X)
                 </TableFieldNameCell>
                 <TableCell>
-                  {Number(currentItem?.easting || 0).toLocaleString()}
+                  {isMetaEditMode ? (
+                    <TextField value={currentItem?.easting} />
+                  ) : (
+                    Number(currentItem?.easting || 0).toLocaleString()
+                  )}
                 </TableCell>
                 <TableFieldNameCell variant="head">
                   Northing (Y)
                 </TableFieldNameCell>
                 <TableCell>
-                  {Number(currentItem?.northing || 0).toLocaleString()}
+                  {isMetaEditMode ? (
+                    <TextField value={currentItem?.northing} />
+                  ) : (
+                    Number(currentItem?.northing || 0).toLocaleString()
+                  )}
                 </TableCell>
               </TableRow>
             </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={4}>
+                  <div style={{ display: "flex" }}>
+                    <div style={{ flexGrow: 1 }} />
+                    <Button
+                      onClick={() => {
+                        setMetaEditMode(!isMetaEditMode);
+                      }}
+                    >
+                      {isMetaEditMode ? "적용" : "수정"}
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            </TableFooter>
           </Table>
         </TableContainer>
+
         <TableContainer className={classes.container} component={Paper}>
           <Table stickyHeader aria-label="sticky table">
             <TableHead className={classes.boreholeTableHead}>
